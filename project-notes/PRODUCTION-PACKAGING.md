@@ -82,8 +82,10 @@ a prerequisite for running or rebuilding the release.
 
 ## Publish `/docs` on GitHub Pages
 
-No remote is configured yet and this preparation does not publish anything.
-After uploading the Git-eligible repository files:
+The [live demo](https://monstercameron.github.io/Neural-Sight/) is published from
+`main` → `/docs` in `monstercameron/Neural-Sight`, with HTTPS enforced.
+The repository website field and README point to that same address.
+To reproduce these settings in a fork after uploading Git-eligible files:
 
 1. Open repository **Settings → Pages**.
 2. Choose **Deploy from a branch**, select your publishing branch and **/docs**.

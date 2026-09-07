@@ -1,5 +1,8 @@
 # Neural Sight
 
+**[Play the live demo →](https://monstercameron.github.io/Neural-Sight/)** ·
+[Project thesis & outcome](https://monstercameron.github.io/Neural-Sight/experiment.html)
+
 A first-person browser experiment built over roughly 24 hours with **GPT-6 Astra**,
 combining captured Gaussian-splat environments, generated footage of hands and a
 rifle, and conventional gameplay code. The question was how far this combination
@@ -34,10 +37,9 @@ distortions and footage/scene lighting differences remain visible.
 
 ## Try it
 
-The GitHub Pages demo is built into [`docs/`](docs/). After the repository is
-uploaded, enable Pages for the publishing branch and its `/docs` folder, then use
-the URL GitHub assigns. The build includes an [experiment story page](docs/experiment.html).
-No public demo URL or completed deployment is claimed here.
+Open the **[live GitHub Pages demo](https://monstercameron.github.io/Neural-Sight/)**
+or read the [project thesis and outcome](https://monstercameron.github.io/Neural-Sight/experiment.html).
+Pages publishes the committed [`docs/`](docs/) build from `main`, over HTTPS.
 
 Use a desktop browser with WebGPU support and hardware acceleration. Enter the
 session to enable sound and mouse capture. Built-in scenes stream splats and
