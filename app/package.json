@@ -1,0 +1,22 @@
+{
+  "name": "neural-sight-playcanvas-harness",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "build:pages": "node ../scripts/build-pages.mjs",
+    "pack:media": "node ../scripts/pack-media.mjs",
+    "audit:upload": "node ../scripts/package-production.mjs --audit"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "playcanvas": "2.22.0"
+  },
+  "devDependencies": {
+    "@playcanvas/splat-transform": "3.3.3",
+    "vite": "8.2.2"
+  }
+}

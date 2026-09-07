@@ -1,0 +1,46 @@
+# Secrets, dependencies and local-only experiment material
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+*.pem
+*.key
+node_modules/
+dist/
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+/work/
+/playcanvas-engine/
+/requirements-media.txt
+
+# Original media and downloaded levels stay on disk, but never ship.
+# ZIP packs are the release source; loose runtime files remain local.
+/docs/media/**
+# BEGIN production asset allowlist (package-production.mjs)
+/assets/**
+# END production asset allowlist
+
+# Keep only scripts used to build and audit the runnable app.
+/scripts/*
+!/scripts/package-production.mjs
+!/scripts/build-pages.mjs
+!/scripts/pack-media.mjs
+
+# Local tests, study pages and unused experiment entrypoints do not ship.
+*.test.js
+*.test.mjs
+/app/test-core.mjs
+/app/*.md
+!/app/README.md
+/app/*-review.html
+/app/src/getup-review.js
+/app/src/splat-occlusion-review.js
+/app/src/zombie-review.js
+/app/src/*.experiment.js
+
+# Runnable Pages build and the requested experiment story remain included.
+!/docs/

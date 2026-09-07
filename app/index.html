@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Neural Sight — Choose a level</title>
+  </head>
+  <body>
+    <section id="media-startup" aria-label="Preparing Neural Sight" aria-busy="true">
+      <div class="media-card">
+        <span class="eyebrow">NEURAL SIGHT / CAPTURE EXPERIMENT</span>
+        <h1>Loading the frame.</h1>
+        <p>Production footage, sound and models. Packed once, cached locally when browser storage is available.</p>
+        <progress id="media-startup-progress" max="1" value="0" aria-label="Media loading progress"></progress>
+        <p id="media-startup-status" role="status">Preparing media…</p>
+        <button id="media-startup-retry" hidden>Retry loading</button>
+        <button id="media-startup-clear" hidden>Clear media cache &amp; reload</button>
+        <p>Levels stream separately from their publishers. Internet access is required.</p>
+        <div class="project-links"><a href="./experiment.html">Project thesis →</a><a href="https://superspl.at/" target="_blank" rel="noopener noreferrer">Explore SuperSplat ↗</a></div>
+        <noscript>This prototype requires JavaScript and a WebGPU-capable browser.</noscript>
+      </div>
+    </section>
+    <canvas
+      id="application-canvas"
+      tabindex="0"
+      aria-label="San Juan 3D splat viewport"
+    ></canvas>
+    <canvas
+      id="weapon-canvas"
+      aria-label="WebGPU screen-space weapon compositor"
+    ></canvas>
+    <div class="vignette"></div>
+    <div id="hit-feedback" aria-hidden="true"></div>
+    <div id="session-status">
+      <div id="zombie-hud" aria-live="off">Preparing infected encounter…</div>
+      <div class="badges">
+        <span id="backend">STARTING</span><span id="fps">— FPS</span>
+      </div>
+    </div>
+    <section id="level-picker" aria-labelledby="level-picker-title">
+      <div class="level-picker-inner">
+        <span class="eyebrow">NEURAL SIGHT / FIELD SESSIONS</span>
+        <h2 id="level-picker-title">Choose your ground.</h2>
+        <p>Real captured places. AI-generated hands. A 24-hour playable experiment.</p>
+        <div class="project-links" aria-label="Project resources"><a href="https://superspl.at/" target="_blank" rel="noopener noreferrer">Explore SuperSplat ↗</a><a href="./experiment.html">Project thesis &amp; outcome →</a></div>
+        <div id="level-cards" class="level-grid"></div>
+        <details class="level-cache-panel"><summary>Level download cache · manage / purge</summary><div id="level-cache-panel"></div></details>
+        <div class="launch-row"><label>Starting detail <select id="launch-quality"><option value=".5">Light · 0.5M</option><option value="1.5" selected>Balanced · 1.5M</option><option value="3">Detailed · 3M</option><option value="6">Heavy · 6M</option></select></label><button id="launch-level">Load selected level →</button></div>
+        <p id="level-selection-note" aria-live="polite"></p>
+        <p><a id="scene-source" target="_blank" rel="noopener noreferrer">Publisher, attribution &amp; scene rights ↗</a></p>
+        <details class="scene-import"><summary>Add a SuperSplat scene</summary>
+          <form id="add-scene-form">
+            <label for="scene-url">Public scene URL</label>
+            <input id="scene-url" type="url" required placeholder="https://superspl.at/scene/…" />
+            <button id="import-scene" type="submit">Inspect &amp; add scene</button>
+            <label for="scene-resolver">Resolver URL <small>Only needed for new URLs on GitHub Pages; see repository setup.</small></label>
+            <input id="scene-resolver" type="text" placeholder="https://your-resolver.workers.dev/" />
+            <p id="import-status" role="status">Checks streamed LOD support and published voxel colliders. Without colliders: free-fly only.</p>
+          </form>
+        </details>
+        <p class="session-note">Levels stream from their publishers. Public viewing does not grant redistribution rights. Modern WebGPU browser recommended.</p>
+      </div>
+    </section>
+    <nav class="session-controls" aria-label="Session controls">
+      <button id="sound" aria-pressed="false">Enable sound</button>
+      <button id="sound-test">Test gunshot</button>
+      <button id="tools" aria-expanded="false" aria-controls="lab">Tools <kbd>Tab</kbd></button>
+      <button id="menu">Menu <kbd>Esc</kbd></button>
+    </nav>
+    <section id="session-overlay" aria-labelledby="session-title">
+      <div class="session-card">
+        <span class="eyebrow">NEURAL SIGHT / CAPTURE STUDY 001</span>
+        <h2 id="session-title">Step into<br />San Juan.</h2>
+        <p class="session-copy">A captured place. A first-person perspective.</p>
+        <div class="session-rule"></div>
+        <p id="session-description">Walk the historic district with a screen-space video viewmodel and voxel collision.</p>
+        <button id="play" disabled>Preparing scene… <span>→</span></button>
+        <button id="change-level">Change level</button>
+        <div class="project-links"><a href="https://superspl.at/" target="_blank" rel="noopener noreferrer">Explore SuperSplat ↗</a><a href="./experiment.html" target="_blank" rel="noopener noreferrer">Project thesis &amp; outcome ↗</a></div>
+        <p class="session-keys">WASD walk · Shift run · C / Ctrl crouch · Space jump<br />Mouse look · Left click fire · Right click / X aim · Tap R swap mag · Hold R repack · V fire mode<br />F toss bouncy ball · ~ returns to spawn · Home resets the full session</p>
+        <p class="session-note">Sound and mouse capture start on entry.<br />Esc releases the mouse. Click the viewport to recapture.</p>
+        <div class="session-credit">EXPERIMENTAL BUILD / SAN JUAN, PUERTO RICO<br />Scene: AJ Creek / virtualworldtours<br />Scene reuse rights and generated footage approval pending.</div>
+      </div>
+    </section>
+    <header>
+      <div>
+        <span class="eyebrow">NEURAL SIGHT <i> / </i> FIELD TEST 001</span>
+        <h1>San Juan<span>HISTORIC DISTRICT / PUERTO RICO</span></h1>
+      </div>
+    </header>
+    <aside id="lab" class="collapsed" aria-label="Prototype tools">
+      <div class="panel-heading">
+        <span>VIEWMODEL LAB</span><small>Tab to hide</small>
+      </div>
+      <div class="state-row">
+        <strong id="state">LOW READY</strong><span id="movement">STILL</span>
+      </div>
+      <div class="timeline"><div id="timeline-fill"></div></div>
+      <p id="transition">Loading poses</p>
+      <div class="actions">
+        <button id="aim-button" data-action="aim">Aim <kbd>X</kbd></button
+        ><button id="fire">Fire <kbd>LMB</kbd></button
+        ><button data-action="reload">Reload <kbd>R</kbd></button
+        ><button data-action="equip">Equip / stow <kbd>E</kbd></button
+        ><button data-action="mode">Fire mode <kbd>V</kbd></button
+        ><button data-action="hit">Hit <kbd>H</kbd></button
+        ><button data-action="miss">Near miss <kbd>N</kbd></button
+        ><button data-action="death">Death <kbd>K</kbd></button>
+      </div>
+      <button data-action="repack" id="repack-button">Start / stop packing magazines</button>
+      <p id="repack-status">Tap R to swap a magazine · hold R to slowly repack</p>
+      <button id="spawn-ball">Toss bouncy ball <kbd>F</kbd></button>
+      <button id="clear-balls">Clear balls</button>
+      <button id="revive-zombies">Revive defeated zombies <kbd>G</kbd></button>
+      <label><input id="zombies-enabled" type="checkbox" checked> Active zombie encounter</label>
+      <p id="zombies-status">Preparing navigation and rigged characters…</p>
+      <p id="balls-count">0 / 24 balls · F alternates beach / soccer</p>
+      <p id="balls-status">Shoot or bump them · bounce against the level · clear after 90s</p>
+      <label for="scrub">RAISE STUDY <small>video-frame draft</small></label
+      ><input
+        id="scrub"
+        type="range"
+        min="0"
+        max="1"
+        step=".01"
+        value="0"
+        aria-label="Scrub low-ready to ADS"
+      /><button id="resume" class="text-button">Resume state machine</button>
+      <div class="settings">
+        <label
+          >Detail budget<select id="quality">
+            <option value=".5">0.5M · light</option>
+            <option value="1.5" selected>1.5M · balanced</option>
+            <option value="3">3M · detailed</option>
+            <option value="6">6M · heavy</option>
+          </select></label
+        ><label
+          >LOD<select id="lod">
+            <option value="-1">Adaptive 0–7</option>
+            <option value="0">0 · highest</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7 · lowest</option>
+          </select></label
+        >
+      </div>
+      <p id="quality-note">Adaptive detail within budget</p>
+      <h3>Live effects</h3>
+      <label><input id="splat-aa" type="checkbox" /> Splat footprint AA · trial</label>
+      <label for="splat-min-pixels">Small-splat cutoff · pixels <small>lower retains distant detail · may cost performance</small></label>
+      <input id="splat-min-pixels" type="range" min="1" max="3" step=".25" value="2" />
+      <p>Hold C or Ctrl to crouch · release to stand when clear</p>
+      <p id="crouch-status">STANDING · eye 1.50m</p>
+      <label><input id="crouch-preview" type="checkbox" /> Hold crouch · preview</label>
+      <label><input id="run-preview" type="checkbox" /> Run carry · stationary preview</label>
+      <label for="run-frame-boost">Run framing enlargement · % <small>experimental · off pending visual review · bottom anchored</small></label>
+      <input id="run-frame-boost" type="range" min="0" max="80" step="5" value="0" />
+      <label for="ads-input-mode">ADS input behavior</label>
+      <select id="ads-input-mode"><option value="hold" selected>Hold to aim</option><option value="toggle">Toggle aim</option></select>
+      <p id="ads-input-status">Hold right mouse / X / Aim button to aim</p>
+      <label><input id="impacts-enabled" type="checkbox" checked /> Bullet impact effects</label>
+      <label><input id="shot-rays" type="checkbox" /> Show last shot ray / hit point</label>
+      <p id="ballistics-status">HITSCAN READY · 250m · voxel surface</p>
+      <p id="ballistics-detail">No shots yet</p>
+      <button id="effects-reset">Reset effects to defaults</button>
+      <label><input id="sharpen-enabled" type="checkbox" checked /> Detail sharpening</label>
+      <label for="sharpen-strength">Sharpening strength <small>scene and weapon · center-weighted</small></label>
+      <input id="sharpen-strength" type="range" min="0" max="1" step=".05" value=".15" />
+      <p id="sharpen-status">DETAIL SHARPEN · 15% · center-weighted</p>
+      <label><input id="taa-enabled" type="checkbox" checked /> Temporal anti-aliasing · scene</label>
+      <label for="taa-jitter">TAA subpixel jitter</label>
+      <input id="taa-jitter" type="range" min=".25" max="1" step=".05" value=".5" />
+      <label for="taa-stability">Temporal stability <small>60 Hz reference · time-normalized · less history during motion</small></label>
+      <input id="taa-stability" type="range" min=".5" max=".95" step=".01" value=".88" />
+      <p id="taa-status">Preparing temporal AA…</p>
+      <label><input id="motion-enabled" type="checkbox" checked /> Motion blur · sharp center</label>
+      <label for="motion-shutter">Shutter amount</label>
+      <input id="motion-shutter" type="range" min="0" max="1" step=".05" value=".5" />
+      <label for="motion-radius">Maximum blur · pixels</label>
+      <input id="motion-radius" type="range" min="2" max="24" step="1" value="12" />
+      <label for="motion-history">Video frame blend <small>0 removes temporal trails</small></label>
+      <input id="motion-history" type="range" min="0" max=".3" step=".025" value=".1" />
+      <label><input id="sprint-motion-enabled" type="checkbox" checked /> Sprint peripheral motion blur</label>
+      <label for="sprint-motion-strength">Sprint boost · % <small>smooth entry / exit · center protected</small></label>
+      <input id="sprint-motion-strength" type="range" min="0" max="100" step="5" value="75" />
+      <label><input id="recoil-enabled" type="checkbox" checked /> Procedural recoil</label>
+      <label><input id="camera-kick-enabled" type="checkbox" checked /> Shot camera kick</label>
+      <label for="camera-kick-strength">Camera kick strength</label>
+      <input id="camera-kick-strength" type="range" min="0" max="2" step=".1" value="1" />
+      <label for="camera-kick-recovery">Camera spring recovery</label>
+      <input id="camera-kick-recovery" type="range" min=".5" max="2" step=".1" value="1" />
+      <p id="camera-kick-status">CAMERA KICK · ready</p>
+      <label><input id="ads-control-enabled" type="checkbox" checked /> ADS counter-steering</label>
+      <label><input id="ads-sway-enabled" type="checkbox" checked /> ADS breathing sway</label>
+      <label for="ads-sway-strength">ADS sway strength <small>small mouse corrections</small></label>
+      <input id="ads-sway-strength" type="range" min="0" max="2" step=".1" value="1" />
+      <label for="ads-sway-rate">ADS breathing rate</label>
+      <input id="ads-sway-rate" type="range" min=".5" max="2" step=".1" value="1" />
+      <label for="ads-control-weight">Mouse correction weight <small>abrupt corrections carry momentum</small></label>
+      <input id="ads-control-weight" type="range" min="0" max="1.5" step=".1" value=".6" />
+      <label for="ads-control-settling">ADS settling speed</label>
+      <input id="ads-control-settling" type="range" min=".5" max="2" step=".1" value="1" />
+      <meter id="ads-stability" min="0" max="1" value="1" aria-label="Sight stability"></meter>
+      <p id="ads-control-status">ADS only · camera input stays direct</p>
+      <label for="recoil-strength">Recoil strength</label>
+      <input id="recoil-strength" type="range" min="0" max="2" step=".1" value="1" />
+      <label for="recoil-noise">Recoil variation</label>
+      <input id="recoil-noise" type="range" min="0" max="2" step=".1" value="1" />
+      <label for="recoil-recovery">Recoil recovery speed</label>
+      <input id="recoil-recovery" type="range" min=".5" max="2" step=".1" value="1" />
+      <label for="hip-fire-chaos">Hip-fire instability <small>wider kick and roll than ADS</small></label>
+      <input id="hip-fire-chaos" type="range" min="1" max="3" step=".1" value="2.2" />
+      <label><input id="head-lead" type="checkbox" checked /> Free-look gun follow</label>
+      <label for="head-cone-screen">Free-look region · % of screen <small>20% = 10% each side · run +75% · ADS stays tight</small></label>
+      <input id="head-cone-screen" type="range" min="0" max="40" step="1" value="20" />
+      <label><input id="bob-enabled" type="checkbox" checked /> Walking view bob</label>
+      <label for="bob-strength">Bob strength <small>reduced in ADS</small></label>
+      <input id="bob-strength" type="range" min="0" max="1.5" step=".1" value="1" />
+      <label><input id="grade-enabled" type="checkbox" checked /> Cinematic color grade</label>
+      <label for="grade-strength">Grade intensity <small>natural daylight print</small></label>
+      <input id="grade-strength" type="range" min="0" max="1" step=".05" value=".85" />
+      <label for="film-print">Daylight film palette <small>warm upper mids · dense shadows · restrained sky</small></label>
+      <input id="film-print" type="range" min="0" max="1" step=".05" value=".7" />
+      <label><input id="film-texture-enabled" type="checkbox" checked /> Shared film texture · WebGPU</label>
+      <label for="film-grain">Fine grain <small>after TAA · no history contamination</small></label>
+      <input id="film-grain" type="range" min="0" max="1" step=".05" value=".2" />
+      <label for="film-diffusion">Highlight diffusion <small>world + weapon · no full-frame blur</small></label>
+      <input id="film-diffusion" type="range" min="0" max="1" step=".05" value="0" />
+      <label for="grade-blue-compression">Blue chroma restraint <small>0 = prior palette · preserves neutrals and warm materials</small></label>
+      <input id="grade-blue-compression" type="range" min="0" max=".35" step=".01" value=".28" />
+      <label for="grade-midtone-softness">Midtone contrast softening <small>optional · off by default · protects deep black and bright highlights</small></label>
+      <input id="grade-midtone-softness" type="range" min="0" max=".35" step=".01" value="0" />
+      <label for="grade-shadow-separation">Shadow separation <small>opens dark detail · does not raise the black floor</small></label>
+      <input id="grade-shadow-separation" type="range" min="0" max=".04" step=".002" value=".024" />
+      <p id="grade-status">Preparing shared color grade</p>
+      <label><input id="film-tone-enabled" type="checkbox" checked /> Filmic highlight roll-off · scene + weapon</label>
+      <label for="film-tone-knee">Highlight compression starts at <small>linear level · lower = softer highlights</small></label>
+      <input id="film-tone-knee" type="range" min=".4" max=".9" step=".05" value=".6" />
+      <p id="film-tone-status">Checking working-buffer highlight headroom…</p>
+      <small>Late compression trades highlight separation for brightness. Clipped source detail cannot be recovered.</small>
+      <label><input id="scene-light-enabled" type="checkbox" checked /> Match video brightness to scene</label>
+      <label for="scene-light-strength">Scene light matching <small>saved per level</small></label>
+      <input id="scene-light-strength" type="range" min="0" max="2" step=".1" value="1" />
+      <label for="scene-light-bias">Video exposure trim · EV <small>saved per level</small></label>
+      <input id="scene-light-bias" type="range" min="-1" max="1.5" step=".05" value="0" />
+      <p id="scene-light-status">Waiting for scene brightness</p>
+      <label><input id="dof-enabled" type="checkbox" checked /> Cinematic depth of field</label>
+      <label for="dof-strength">Lens softness <small>world depth + weapon · independent of ADS/run kernel</small></label>
+      <input id="dof-strength" type="range" min="0" max="1.5" step=".05" value=".3" />
+      <label for="peripheral-focus-radius">Peripheral focus radius · pixels <small>world ADS/run only · center protected · 0 = bypass</small></label>
+      <input id="peripheral-focus-radius" type="range" min="0" max="12" step=".5" value="6" />
+      <label for="dof-focus">Focus distance · metres</label>
+      <input id="dof-focus" type="range" min="6" max="30" step="1" value="14" />
+      <p id="dof-status">Preparing depth of field</p>
+      <label><input id="dof-temporal-input" type="checkbox" /> Temporal DOF input · experimental</label>
+      <p id="dof-input-status">DOF source · current frame · trial</p>
+      <label><input id="ads-zoom-enabled" type="checkbox" checked /> ADS FOV tightening</label>
+      <label for="ads-fov-tightening">ADS FOV reduction · % <small>75° → 45° by default</small></label>
+      <input id="ads-fov-tightening" type="range" min="0" max="40" step="5" value="40" />
+      <label><input id="ads-focus-enabled" type="checkbox" checked /> ADS peripheral DOF</label>
+      <label for="ads-focus-strength">ADS edge softness · % <small>sights stay clear</small></label>
+      <input id="ads-focus-strength" type="range" min="0" max="100" step="1" value="39" />
+      <p id="ads-view-status">ADS VIEW · 75.0° FOV</p>
+      <label><input id="sprint-focus-enabled" type="checkbox" checked /> Sprint border softness</label>
+      <label for="sprint-focus-strength">Sprint edge boost · % <small>center stays clear</small></label>
+      <input id="sprint-focus-strength" type="range" min="0" max="100" step="5" value="30" />
+      <label><input id="sprint-focus-preview" type="checkbox" /> Hold sprint blur · preview</label>
+      <p id="sprint-focus-status">SPRINT BORDER SOFTNESS · +0%</p>
+      <label for="volume">SFX level <small>draft samples</small></label>
+      <input id="volume" type="range" min="0" max="1" step=".05" value=".75" />
+      <p id="audio-status">Audio awaits session entry</p>
+      <meter id="audio-meter" min="0" max="1" value="0" aria-label="Audio output level"></meter>
+      <p id="audio-peak">Output not tested</p>
+      <label><input id="flash-enabled" type="checkbox" checked /> Muzzle flashes</label>
+      <label><input id="firing-video-enabled" type="checkbox" checked /> Generated hip-fire video · ADS uses original</label>
+      <label for="flash-opacity">Flash / smoke opacity <small>0.25 = 25% visible · gun stays solid</small></label>
+      <input id="flash-opacity" type="range" min="0" max="1" step=".05" value=".25" />
+      <small>Per-frame masks reveal the scene through video flame and smoke. Reflected gun lighting stays intact. Controls below adjust the shader fallback.</small>
+      <label for="flash-strength">Flash brightness</label>
+      <input id="flash-strength" type="range" min="0" max="4" step=".1" value="2" />
+      <label for="flash-size">Flash size</label>
+      <input id="flash-size" type="range" min=".5" max="3" step=".1" value="1.7" />
+      <label><input id="flash-light-enabled" type="checkbox" checked /> Muzzle light on gun and hands</label>
+      <label for="flash-light-strength">Video light spill</label>
+      <input id="flash-light-strength" type="range" min="0" max="3" step=".1" value="1.2" />
+      <label for="flash-duration">Flash duration · ms</label>
+      <input id="flash-duration" type="range" min="15" max="120" step="5" value="50" />
+      <label><input id="flash-preview" type="checkbox" /> Hold flash · placement preview</label>
+      <label><input id="key-enabled" type="checkbox" checked /> Chroma key <small>off shows raw green</small></label>
+      <label for="key-threshold">Key threshold</label>
+      <input id="key-threshold" type="range" min=".02" max=".35" step=".01" value=".14" />
+      <label for="key-softness">Key edge softness</label>
+      <input id="key-softness" type="range" min=".02" max=".5" step=".01" value=".28" />
+      <label for="key-despill">Green spill removal</label>
+      <input id="key-despill" type="range" min="0" max="1" step=".05" value="1" />
+      <button id="hud-toggle">Hide HUD · clean capture</button>
+      <p id="events">Ready</p>
+      <p id="collision-status">Loading voxel collision</p>
+      <div class="actions">
+        <button id="collision-toggle">Walk / free fly</button
+        ><button id="mesh-toggle">Toggle mesh</button>
+      </div>
+      <div class="panel-footer">
+        <span id="weapon-backend">WEBGPU</span
+        ><button data-action="reset">Reset view</button>
+      </div>
+    </aside>
+    <div class="ammo">
+      <strong id="ammo">30</strong
+      ><span>/ 30 · <span id="reserve-ammo">3</span> READY MAGS<br /><span id="magazine-rounds">30/30 · 30/30 · 30/30</span><br /><b id="mode">SINGLE</b><br /><span id="magazine-action"></span></span>
+    </div>
+    <footer>
+      <div>
+        <span class="dot"></span
+        ><span id="scene-status">LOADING LOCAL SPLATS</span
+        ><small>AJ Creek / virtualworldtours · reuse rights unconfirmed</small>
+      </div>
+      <div class="input">
+        <span>WASD move · Shift run · Q/Z free-fly height</span
+        ><span id="input-hint">Mouse look · Left click fire · Space jump · Right click / X aim</span
+        ><button id="enter">Capture mouse</button>
+      </div>
+    </footer>
+    <div id="position"></div>
+    <div id="play-hint">Mouse look <i>·</i> Left click fire <i>·</i> Space jump</div>
+    <div id="death-notice" hidden>FEED LOST<span>Press Home to reset</span></div>
+    <div id="loading">
+      Loading San Juan<span
+        >Local streamed Gaussian splats + WebGPU viewmodel</span
+      >
+    </div>
+    <div id="error" role="alert" hidden><p id="error-message"></p><button id="retry-level">Retry level</button><button id="error-level-picker">Choose another level</button></div>
+    <script type="module" src="/src/bootstrap.js"></script>
+  </body>
+</html>

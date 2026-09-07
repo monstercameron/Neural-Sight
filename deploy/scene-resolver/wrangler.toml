@@ -1,0 +1,9 @@
+name = "neural-sight-scene-resolver"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+# REQUIRED: replace with the exact HTTPS app origin, without a path or slash.
+# GitHub project Pages uses https://OWNER.github.io (not /REPO/docs).
+ALLOWED_APP_ORIGIN = ""

@@ -1,0 +1,7 @@
+# Generated; retain old archives on disk but ship only this release.
+/*
+!/.gitignore
+!/manifest.json
+!/media-e686d6f7d3e4886d175791d0eb9776fc87f0e9735661407b394a7f861d377a35.zip
+!/media-8db14f376cdb5131d2596631d80505d3146353f0dd02ee8a86c95154eaf2d5b9.zip
+!/media-54d6a2e3fe40824a28ee347a28bcc090e2faaabb538e1241ddf788b66211b68f.zip
