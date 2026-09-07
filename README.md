@@ -1,83 +1,100 @@
 # Neural Sight
 
 **[Play the live demo →](https://monstercameron.github.io/Neural-Sight/)** ·
-[Project thesis & outcome](https://monstercameron.github.io/Neural-Sight/experiment.html)
+[Project thesis & outcome](https://monstercameron.github.io/Neural-Sight/experiment.html) ·
+[Explore SuperSplat](https://superspl.at/)
 
-A first-person browser experiment built over roughly 24 hours with **GPT-6 Astra**,
-combining captured Gaussian-splat environments, generated footage of hands and a
-rifle, and conventional gameplay code. The question was how far this combination
-could get toward a convincing photographic game prototype in a short session.
+A photographic FPS playground built over roughly 24 hours with **GPT-6 Astra**.
+Captured places, generated hands and weapon footage, and responsive gameplay—all
+running in a browser.
 
-The result is an interactive prototype with movement, aiming, firing, finite
-ammunition, reloads, crouching, jumping, spatial audio, and a small zombie encounter.
-The weapon footage is composited in screen space; it is not a fully modeled,
-world-lit weapon. PlayCanvas renders the environment and gameplay objects, and
-a WebGPU compositor handles the photographic weapon layer.
+The idea is simple: **how much realism can we get from captured and pre-generated
+assets, and how quickly can we turn them into something fun to play?**
 
-The strongest outcome is a working combination of captured environments and
-responsive footage-based interaction. Its limits are still visible: capture holes
-and floaters, lighting differences between footage and scene, imperfect pose joins,
-source cadence, optical approximations, and variable performance. This is an
-experiment report, not a finished-game announcement or a controlled benchmark.
+## Captured worlds, generated presence
 
-The current film-look refinement ledger records **8 of 50 cycles complete**.
-The active focus is depth of field, motion blur, temporal antialiasing and sharpness.
-Zombies remain in the demo but are not the current refinement focus. Neither
-completion of all 50 cycles nor an ARRI ALEXA/feature-film quality match is claimed.
-The 24-hour description refers to the initial experiment, not a measured guarantee
-of development time, quality or future reproducibility.
+Gaussian splats provide the static world: weathered timber, sunlit stone, rusty
+metal and the lighting captured with them. Instead of reconstructing every
+surface as a conventional mesh and material, the scene preserves its photographed
+appearance as a collection of 3D Gaussians. You can move through it and look around;
+it isn't a flat background video.
 
-The reference-led optics pass adds a warm daylight print, restrained blue chroma,
-fine post-TAA grain, gentler sharpening and a smaller TAA jitter footprint. Keyed
-weapon texels are filtered in premultiplied linear light; generated smoke is
-separated from the stable gun and its reflected muzzle light. Highlight diffusion
-and native splat-AA trials remain off by default. These are measured prototype
-improvements, not an independent 8/10 or feature-film certification. Source scan
-distortions and footage/scene lighting differences remain visible.
+The hands and weapon take a different shortcut. AI-generated footage is prepared
+ahead of time, extracted into frames, and composited in screen space. A state
+machine connects low ready, aiming, firing, running, crouching and reloads.
+Camera motion, elastic free-look, recoil compensation and sound give those fixed
+assets a responsive performance.
+
+**Generation happens before play. Interaction happens in real time.** No model
+request sits between a mouse movement and the next frame.
+
+PlayCanvas renders the splats and dynamic objects. Published voxel colliders
+provide ground contact and bullet ray hits. A WebGPU compositor brings the world
+and weapon together with color grading, peripheral focus, motion blur, temporal
+antialiasing and sharpening.
+
+## Realism and performance
+
+The experiment puts captured appearance to work where it is strongest: **static
+scenes**. Lighting and surface detail are already present in the capture, while
+gameplay code handles movement, physics and interaction.
+
+Performance comes down to what is visible and how much work each frame requires:
+
+- Streamed levels of detail and a configurable splat budget control scene cost.
+- Prepared weapon frames keep generation out of the gameplay loop.
+- Three ZIP packs hold the production media; the browser unpacks them in memory
+  and caches them for later visits.
+- Downloaded splat chunks, textures and colliders are cached separately per level.
+
+These are useful tradeoffs, not free realism. Large splat scenes still cost GPU
+time, bandwidth and memory; video frames need decoding and compositing; cinematic
+effects add work. Captures have holes and baked lighting, and screen-space footage
+cannot provide arbitrary weapon viewpoints. This prototype explores the balance—it
+doesn't establish a performance win over rasterization or path tracing.
+
+## Built to play with
+
+Sprint through a captured place. Fight the recoil to keep a sight on target.
+Swap magazines or slowly repack their remaining rounds. Toss beach balls into the
+scene, shoot them, or try the experimental zombie encounter.
+
+The tools panel exposes the image and motion settings so you can change the feel
+while playing. GPT-6 Astra helped build and iterate across gameplay, shaders,
+asset processing, audio and browser testing. The point was to make an unusual
+idea playable quickly, learn from it, and have fun with the result.
 
 ## Try it
 
-Open the **[live GitHub Pages demo](https://monstercameron.github.io/Neural-Sight/)**
-or read the [project thesis and outcome](https://monstercameron.github.io/Neural-Sight/experiment.html).
-Pages publishes the committed [`docs/`](docs/) build from `main`, over HTTPS.
+Open the **[live demo](https://monstercameron.github.io/Neural-Sight/)** in a desktop
+browser with WebGPU and hardware acceleration. Choose a level, then enter the
+session to enable sound and mouse capture.
 
-Use a desktop browser with WebGPU support and hardware acceleration. Enter the
-session to enable sound and mouse capture. Built-in scenes stream splats and
-collision data from their publishers; the repository does not include downloaded
-levels. Downloaded splat chunks, textures and voxel colliders are cached per level
-in the browser and reused on later visits. The launch screen’s **Level download
-cache** panel shows sizes and a one-click **Purge cache** for each scene (including
-previously imported IDs). A purge leaves weapon media and other levels untouched;
-caching resumes when that level is launched again. Only downloaded detail is
-cached, not every quality level in advance. Storage is best effort: browser
-eviction, unseen chunks, and custom URL resolution can still require the network.
+The first visit loads about **59 MiB of production media**, plus streamed level
+data. Later visits reuse browser caches when available. In the launcher, **Level
+download cache → Purge cache** clears one scene without clearing weapon media.
+Only downloaded detail is cached, and browsers may evict stored data.
 
-Loading an arbitrary SuperSplat viewer URL requires the included resolver service:
-the viewer HTML cannot be fetched directly from the browser because of CORS.
-The development resolver runs locally; a hosted deployment needs its worker
-deployed and configured. GitHub Pages serves static files and cannot run that
-resolver. Built-in scene endpoints do not require that HTML-resolution step.
+The four featured scenes work directly. Adding other SuperSplat URLs on the
+hosted demo requires the optional [scene resolver](deploy/scene-resolver/README.md).
 
 ## Controls
 
 | Input | Action |
 | --- | --- |
 | WASD / Shift | Move / sprint |
-| Mouse / left click | Look / fire with captured mouse; drag-look is available |
-| Right mouse / X | Aim; hold or toggle follows the selected setting |
-| C / Ctrl / Space | Crouch / crouch / jump |
-| Tap R / hold R | Reload / repack ammunition |
+| Mouse / left click | Look / fire |
+| Right mouse / X | Aim; hold by default, toggle available in settings |
+| C or Ctrl / Space | Crouch / jump |
+| Tap R / hold R | Swap magazine / repack rounds |
 | V / E | Change fire mode / equip or stow |
-| Escape / Tab | Pause / show or hide tools |
-| G / F | Revive defeated zombies / spawn a physics test ball |
-| Home | Reset view and weapon state |
-
-Tools expose scene, sound and image-quality settings. H, N and K trigger hit,
-near-miss and death test actions. The free-fly tool uses Q/Z for vertical movement.
+| F / G | Toss a ball / revive defeated zombies |
+| Escape / Tab | Pause / show tools |
+| ~ / Home | Return to spawn / reset view and weapon state |
 
 ## Run locally
 
-Install a Node.js release supported by the pinned Vite version, then:
+Use Node 24, then:
 
 ```sh
 cd app
@@ -85,48 +102,22 @@ npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. Runtime use and building need **no generation
-API key**. Do not put secrets in `VITE_*`, source files, a hosted build, or the
-resolver's browser configuration. Historical generation scripts and `.env` remain
-local and ignored; they are not required to run this demo.
+No generation API key is needed to run or build the game.
 
-## Build for upload
-
-From the repository root:
+To rebuild the GitHub Pages site from the repository root:
 
 ```sh
 npm --prefix app run build:pages
-node scripts/package-production.mjs --verify docs/packs
-node scripts/package-production.mjs --audit
+npm --prefix app run audit:upload
 ```
 
-`docs/packs/` contains the production media: **1,011 assets in three ZIPs**, about
-59.3 MiB total. A hashed manifest validates every archive and extracted file.
-The browser unpacks them into in-memory Blob URLs before starting the player,
-and caches the ZIPs for later visits when browser storage is available. A cold
-start downloads all three packs; repeat visits reuse verified cached packs.
-This reduces file/request clutter, not the underlying media size. Levels stream
-separately into a per-level browser cache; this is not a fully offline game.
+Pages serves `main` → `/docs`. Production media lives in `docs/packs/`; raw
+generations, loose working frames, downloaded levels and credentials stay ignored.
+See the [packaging notes](project-notes/PRODUCTION-PACKAGING.md) for asset updates.
 
-`build:pages` verifies packs, builds into ignored `app/dist`, and updates the
-ready-to-serve `docs/` folder. A clean checkout builds using only committed packs;
-it needs neither loose frames nor generation credentials. Original loose files in
-`docs/media/` stay on disk, ignored. Old ZIPs and app bundles also remain on disk
-but only the current release is Git-eligible. Do not upload the entire local
-folder: upload Git-eligible files only.
+## Credits
 
-`.gitignore` excludes the entire original `assets/` tree, raw takes, downloaded
-levels, generation metadata, recordings, tests, standalone review pages,
-historical ledgers, dependencies and local secrets. It preserves these files on
-disk. Required manifests, endpoint images, audio, character models and notices
-ship inside `docs/packs/`, alongside runtime source and build code.
-The current weapon player uses extracted frames as its production media; the
-unused original MP4 takes stay local and ignored. Restricting upload to video
-extensions alone would break the demo.
-
-Read [the packaging contract](project-notes/PRODUCTION-PACKAGING.md) for the
-inventory, audit commands, limitations and update procedure, and
-[asset notices](project-notes/ASSET-NOTICES.md) for attribution and rights context.
-Nothing in the packaging workflow commits, pushes, downloads levels or purchases
-generation. A secret scan is a heuristic check, not a guarantee that every possible
-credential format has been detected.
+Scenes stream from their [SuperSplat](https://superspl.at/) publishers, with
+attribution shown in the level selector. The prototype uses PlayCanvas, generated
+weapon footage and sound, and third-party character assets. See
+[asset notices](project-notes/ASSET-NOTICES.md) for credits and reuse terms.
