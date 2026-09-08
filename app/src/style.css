@@ -503,8 +503,18 @@ body:not(.playing) #play-hint, .tools-open #play-hint { display: none; }
 @media(max-width:640px){#session-status{right:16px;}}
 .playing #zombie-hud{display:block}.clean-capture #zombie-hud{display:none}
 /* URL import remains usable on narrow Pages viewports. */
-.scene-import { margin: 1rem 0; text-align: left; }
+.scene-import { margin: 1.5rem 0; padding: 1.1rem; text-align: left; border: 1px solid #536265; border-radius: .6rem; background: #131c1d; }
+.scene-import h3 { margin: 0; font: 400 20px/1.3 Arial, sans-serif; color: #e8ebe5; }
 .scene-import summary { cursor: pointer; }
 .scene-import form { display: grid; gap: .65rem; margin-top: 1rem; }
+.scene-import-row { display: flex; gap: .65rem; }
+.scene-import-row input { flex: 1; }
+.scene-import-row button { flex-shrink: 0; }
+.scene-import h3 small { display: inline-block; margin-left: .5rem; padding: .25rem .5rem; border: 1px solid #536265; border-radius: .3rem; font: 12px/1.3 Arial, sans-serif; vertical-align: middle; }
+.scene-import input:disabled { opacity: .55; cursor: not-allowed; }
+.scene-import button:disabled { cursor: not-allowed; }
+.scene-import input:focus-visible { outline: 2px solid #cdb78c; outline-offset: 2px; }
+#scene-import-availability { margin: 0; }
+@media(max-width:600px){.scene-import-row{flex-direction:column;}}
 .scene-import input { box-sizing: border-box; width: 100%; min-width: 0; padding: .8rem; color: #eee; background: #151b1d; border: 1px solid #536265; border-radius: .35rem; }
 .scene-import small { display: block; opacity: .7; }

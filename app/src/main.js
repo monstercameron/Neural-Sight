@@ -1093,22 +1093,34 @@ function addLevelCard(level) {
 for(const level of LEVELS)addLevelCard(level);
 const levelCacheUi=mountLevelCache($('level-cache-panel'),LEVELS);
 const resolverDefault=import.meta.env.DEV?'./api/scene':(import.meta.env.VITE_SCENE_RESOLVER_URL||'');
-$('scene-resolver').value=resolverDefault;
+// Static Pages has no resolver. Enable only when the build supplies a real
+// endpoint (Vite dev installs its own); never trust a stale saved placeholder.
+const customImportAvailable=Boolean(resolverDefault);
+$('scene-url').disabled=!customImportAvailable;
+$('import-scene').disabled=!customImportAvailable;
+$('scene-import-mode').textContent=customImportAvailable?'URL import available':'Local development only';
+$('scene-import-availability').textContent=customImportAvailable
+  ? 'Paste a public SuperSplat URL to inspect and add it.'
+  : 'Custom URL import is unavailable on this GitHub Pages demo. Choose a featured level below, or run locally to import other scenes.';
+$('scene-local-help').hidden=customImportAvailable;
 try {
-  $('scene-resolver').value=localStorage.getItem('neural-sight.resolver')||resolverDefault;
   const saved=JSON.parse(localStorage.getItem('neural-sight.custom-scene')||'null');
   // Only store the source URL, never trust persisted asset URLs or metadata.
   if(typeof saved==='string')$('scene-url').value=saved;
 } catch {}
 $('add-scene-form').addEventListener('submit',async e=>{
-  e.preventDefault();$('import-scene').disabled=true;$('import-status').textContent='Inspecting publisher scene and voxel metadata…';
+  e.preventDefault();
+  if(!customImportAvailable)return;
+  $('import-scene').disabled=true;$('import-status').textContent='Inspecting publisher scene and voxel metadata…';
   try {
-    const level=await importLevel($('scene-url').value.trim(),{catalog:LEVELS,resolver:$('scene-resolver').value.trim()});
+    const level=await importLevel($('scene-url').value.trim(),{catalog:LEVELS,resolver:resolverDefault});
     const old=[...$('level-cards').children].find(c=>c.dataset.level===level.id);old?.remove();
     addLevelCard(level);selectLevel(level);levelCacheUi.add(level);
     $('import-status').textContent=`${level.lods} quality levels · ${level.colliderStatus}`;
-    try {localStorage.setItem('neural-sight.custom-scene',level.source);localStorage.setItem('neural-sight.resolver',$('scene-resolver').value.trim());}catch{}
-  } catch(error){$('import-status').textContent=error.message;}
+    try {localStorage.setItem('neural-sight.custom-scene',level.source);}catch{}
+  } catch(error){
+    $('import-status').textContent=error.message;
+  }
   finally{$('import-scene').disabled=false;}
 });
 selectLevel(selectedLevel);
@@ -1145,7 +1157,7 @@ $("retry-level").addEventListener('click',()=>{
 try {
   const retry=sessionStorage.getItem('neural-sight.retry');sessionStorage.removeItem('neural-sight.retry');
   if(retry) {
-    void importLevel(retry.startsWith('https:')?retry:levelById(retry).source,{catalog:LEVELS,resolver:$('scene-resolver').value.trim()})
+    void importLevel(retry.startsWith('https:')?retry:levelById(retry).source,{catalog:LEVELS,resolver:resolverDefault})
       .then(level=>{if(!LEVELS.some(l=>l.id===level.id))addLevelCard(level);selectLevel(level);return launchLevel();})
       .catch(error=>{$('import-status').textContent=error.message;$('level-selection-note').textContent=error.message;});
   }

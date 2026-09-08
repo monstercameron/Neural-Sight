@@ -51,21 +51,25 @@
         <h2 id="level-picker-title">Choose your ground.</h2>
         <p>Real captured places. AI-generated hands. A 24-hour playable experiment.</p>
         <div class="project-links" aria-label="Project resources"><a href="https://superspl.at/" target="_blank" rel="noopener noreferrer">Explore SuperSplat ↗</a><a href="./experiment.html">Project thesis &amp; outcome →</a></div>
+        <section class="scene-import" aria-labelledby="scene-import-title">
+          <h3 id="scene-import-title">Play another SuperSplat scene <small id="scene-import-mode">Local development only</small></h3>
+          <p>Paste a public scene link. We’ll inspect its quality levels and check for published voxel colliders.</p>
+          <form id="add-scene-form">
+            <label for="scene-url">SuperSplat scene URL</label>
+            <div class="scene-import-row">
+              <input id="scene-url" type="url" required disabled placeholder="https://superspl.at/scene/…" aria-describedby="scene-import-availability" />
+              <button id="import-scene" type="submit" disabled>Inspect &amp; add scene</button>
+            </div>
+            <p id="scene-import-availability" role="status"></p>
+            <p id="scene-local-help">To import new scene URLs, run the project locally: <code>cd app &amp;&amp; npm ci &amp;&amp; npm run dev</code>. <a href="https://github.com/monstercameron/Neural-Sight#run-locally" target="_blank" rel="noopener noreferrer">Local setup ↗</a></p>
+            <p id="import-status" role="status">Scenes without published colliders use free-fly mode.</p>
+          </form>
+        </section>
         <div id="level-cards" class="level-grid"></div>
         <details class="level-cache-panel"><summary>Level download cache · manage / purge</summary><div id="level-cache-panel"></div></details>
         <div class="launch-row"><label>Starting detail <select id="launch-quality"><option value=".5">Light · 0.5M</option><option value="1.5" selected>Balanced · 1.5M</option><option value="3">Detailed · 3M</option><option value="6">Heavy · 6M</option></select></label><button id="launch-level">Load selected level →</button></div>
         <p id="level-selection-note" aria-live="polite"></p>
         <p><a id="scene-source" target="_blank" rel="noopener noreferrer">Publisher, attribution &amp; scene rights ↗</a></p>
-        <details class="scene-import"><summary>Add a SuperSplat scene</summary>
-          <form id="add-scene-form">
-            <label for="scene-url">Public scene URL</label>
-            <input id="scene-url" type="url" required placeholder="https://superspl.at/scene/…" />
-            <button id="import-scene" type="submit">Inspect &amp; add scene</button>
-            <label for="scene-resolver">Resolver URL <small>Only needed for new URLs on GitHub Pages; see repository setup.</small></label>
-            <input id="scene-resolver" type="text" placeholder="https://your-resolver.workers.dev/" />
-            <p id="import-status" role="status">Checks streamed LOD support and published voxel colliders. Without colliders: free-fly only.</p>
-          </form>
-        </details>
         <p class="session-note">Levels stream from their publishers. Public viewing does not grant redistribution rights. Modern WebGPU browser recommended.</p>
       </div>
     </section>

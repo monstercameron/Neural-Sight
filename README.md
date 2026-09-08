@@ -90,8 +90,11 @@ data. Later visits reuse browser caches when available. In the launcher, **Level
 download cache → Purge cache** clears one scene without clearing weapon media.
 Only downloaded detail is cached, and browsers may evict stored data.
 
-The four featured scenes work directly. Adding other SuperSplat URLs on the
-hosted demo requires the optional [scene resolver](deploy/scene-resolver/README.md).
+The four featured scenes work directly. **Custom SuperSplat URL import is local-only
+in this release**: run `npm run dev` from `app`, then paste a scene link in the
+launcher. URL import is disabled on GitHub Pages because it has no server-side
+resolver. Self-hosters can optionally deploy the [scene resolver](deploy/scene-resolver/README.md)
+and configure its URL at build time.
 
 ## Controls
 

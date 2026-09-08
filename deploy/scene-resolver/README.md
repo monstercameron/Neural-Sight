@@ -33,8 +33,9 @@ server.middlewares.use(createSceneResolverMiddleware({path:'/api/scene'}));
 Direct server use: `resolveScene(url, {fetcher, timeoutMs})`; dependencies are
 optional, and timeout overrides may only shorten the 10-second limit. No Node
 APIs are imported, so the same resolver runs in a Worker. Local development uses
-`/api/scene`; static Pages has no middleware. Set the deployed URL in the scene
-import screen, or set public `VITE_SCENE_RESOLVER_URL` when building Pages.
+`/api/scene`; static Pages has no middleware and labels URL import local-only.
+Self-hosters can set public `VITE_SCENE_RESOLVER_URL` when building Pages to enable
+the importer with their deployed resolver. There is no end-user resolver field.
 
 ## Boundaries and deployment preparation
 
