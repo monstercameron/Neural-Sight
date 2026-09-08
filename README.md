@@ -11,6 +11,21 @@ running in a browser.
 The idea is simple: **how much realism can we get from captured and pre-generated
 assets, and how quickly can we turn them into something fun to play?**
 
+<p align="center">
+  <a href="docs/images/nelson-ghost-town.jpg"><img src="docs/images/nelson-ghost-town.jpg" width="32%" alt="In-game view of a rusted truck and timber water tower in Nelson Ghost Town, with the weapon held low"></a>
+  <a href="docs/images/fort-clatsop.jpg"><img src="docs/images/fort-clatsop.jpg" width="32%" alt="In-game view of the fern-lined visitor entrance at Fort Clatsop"></a>
+  <a href="docs/images/san-juan.jpg"><img src="docs/images/san-juan.jpg" width="32%" alt="In-game view of weathered turquoise plaster and cobblestones in San Juan"></a>
+</p>
+
+Actual in-game captures, HUD hidden. Standing-height views, captured light and
+ordinary surface detail—not concept art. Click an image for the full-size capture.
+
+Left to right: [Nelson Ghost Town](https://superspl.at/scene/fb3b5ed5) by tosolini
+([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/));
+[Fort Clatsop](https://superspl.at/scene/9cbaba42) by virtualworldtours;
+[San Juan](https://superspl.at/scene/fd3083e4) by AJ Creek / virtualworldtours.
+Scene rights remain with their respective creators.
+
 ## Captured worlds, generated presence
 
 Gaussian splats provide the static world: weathered timber, sunlit stone, rusty
